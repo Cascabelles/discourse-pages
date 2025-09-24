@@ -1,0 +1,14 @@
+{{#if this.isActive}}
+  <section class="custom-page">
+    {{#if this.isLoading}}
+      <div class="custom-page__loading container"><div class="spinner"></div></div>
+    {{else}}
+      <div class="custom-page__inner container">
+        <h1 class="custom-page__title">{{this.title}}</h1>
+        <article class="custom-page__content cooked">
+          {{{this.cooked}}}
+        </article>
+      </div>
+    {{/if}}
+  </section>
+{{/if}}
