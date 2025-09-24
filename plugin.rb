@@ -7,17 +7,17 @@
 # url: https://danmachigaiden.com
 
 # Assets para ADMIN (CodeMirror)
-register_asset "javascripts/vendor/codemirror.js", :admin
+# register_asset "javascripts/vendor/codemirror.js", :admin
 
-register_asset "javascripts/vendor/mode/yaml/yaml.js", :admin
-register_asset "javascripts/vendor/mode/javascript/javascript.js", :admin
-register_asset "javascripts/vendor/mode/xml/xml.js", :admin
-register_asset "javascripts/vendor/mode/css/css.js", :admin
-register_asset "javascripts/vendor/mode/markdown/markdown.js", :admin
-register_asset "javascripts/vendor/mode/htmlmixed/htmlmixed.js", :admin
+# register_asset "javascripts/vendor/mode/yaml/yaml.js", :admin
+# register_asset "javascripts/vendor/mode/javascript/javascript.js", :admin
+# register_asset "javascripts/vendor/mode/xml/xml.js", :admin
+# register_asset "javascripts/vendor/mode/css/css.js", :admin
+# register_asset "javascripts/vendor/mode/markdown/markdown.js", :admin
+# register_asset "javascripts/vendor/mode/htmlmixed/htmlmixed.js", :admin
 
-register_asset "stylesheets/vendor/codemirror.css", :admin
-register_asset "stylesheets/vendor/theme/dracula.css", :admin
+# register_asset "stylesheets/vendor/codemirror.css", :admin
+# register_asset "stylesheets/vendor/theme/dracula.css", :admin
 
 enabled_site_setting :custom_pages_enabled
 
