@@ -25,3 +25,4 @@ plugins:
     client: false
     description:
       es: "JSON/YAML de páginas: {slug: {title, mode:inline|iframe, html, css, js}}"
+asd
