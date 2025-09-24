@@ -2,18 +2,19 @@ import { apiInitializer } from "discourse/lib/api";
 import { ajax } from "discourse/lib/ajax";
 
 export default apiInitializer("1.8.0", (api) => {
-  // settings seguros
   const siteSettings = api.container?.lookup?.("site-settings:main") || {};
   if (!siteSettings.custom_pages_enabled) return;
 
-  // base path (subcarpeta)
+  // Base path (subcarpeta)
   let basePath = "";
   try {
     const absRoot = api.getURL("/");
-    const a = document.createElement("a"); a.href = absRoot;
+    const a = document.createElement("a");
+    a.href = absRoot;
     basePath = (a.pathname || "").replace(/\/+$/, "");
-  } catch { basePath = ""; }
-
+  } catch {
+    basePath = "";
+  }
   function stripBase(pathname) {
     if (!basePath) return pathname;
     if (pathname.indexOf(basePath) === 0) {
@@ -23,79 +24,112 @@ export default apiInitializer("1.8.0", (api) => {
     return pathname;
   }
 
-  // === Registrar un service para estado compartido ===
-  // nombre: service:custom-pages
-  class CustomPagesState {
-    active = false;
-    slug = null;
-    title = null;
-    cooked = null;
-    loading = false;
-    error = null;
+  // Estado y helpers DOM
+  let active = false;
+  let slug = null;
+  let rootEl = null;
+
+  function ensureRoot() {
+    if (rootEl && document.body.contains(rootEl)) return rootEl;
+    rootEl = document.getElementById("custom-page-root");
+    if (!rootEl) {
+      rootEl = document.createElement("section");
+      rootEl.id = "custom-page-root";
+      rootEl.className = "custom-page";
+      rootEl.style.display = "none";
+    }
+    // Insertar antes de #main-outlet
+    const outlet = document.getElementById("main-outlet");
+    if (outlet && outlet.parentNode && rootEl.previousElementSibling !== outlet) {
+      outlet.parentNode.insertBefore(rootEl, outlet);
+    } else if (!outlet) {
+      // fallback: al principio del #main
+      const main = document.getElementById("main") || document.body;
+      if (main.firstChild) {
+        main.insertBefore(rootEl, main.firstChild);
+      } else {
+        main.appendChild(rootEl);
+      }
+    }
+    return rootEl;
   }
 
-  // registra service singleton
-  api.container.register("service:custom-pages", CustomPagesState);
-  const state = api.container.lookup("service:custom-pages");
+  function setLayoutHidden(hidden) {
+    const outlet = document.getElementById("main-outlet");
+    if (outlet) outlet.style.display = hidden ? "none" : "";
+    document.documentElement.classList.toggle("custom-page--active", hidden);
+  }
 
-  function matchCustomPage(pathname) {
+  async function loadAndRender(currentSlug) {
+    const el = ensureRoot();
+    el.innerHTML = `
+      <div class="custom-page__loading container">
+        <div class="spinner"></div>
+      </div>
+    `;
+    el.style.display = "block";
+
+    try {
+      const json = await ajax(`/plugin-pages/${encodeURIComponent(currentSlug)}.json`);
+      const title = json.title || currentSlug;
+      const cooked = json.cooked || "<p>(Vacío)</p>";
+      document.title = title;
+      el.innerHTML = `
+        <div class="custom-page__inner container">
+          <h1 class="custom-page__title">${title}</h1>
+          <article class="custom-page__content cooked">${cooked}</article>
+        </div>
+      `;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[custom-pages] load error", e);
+      el.innerHTML = `
+        <div class="custom-page__inner container">
+          <h1 class="custom-page__title">${currentSlug}</h1>
+          <article class="custom-page__content">
+            <p>No se pudo cargar la página <code>${currentSlug}</code>.</p>
+          </article>
+        </div>
+      `;
+    }
+  }
+
+  function matchSlug(pathname) {
     const rel = stripBase(pathname || "/");
     const m = rel.match(/^\/p\/([^/]+)\/?$/i);
     return m ? decodeURIComponent(m[1]) : null;
   }
 
-  async function loadPage(slug) {
-    state.loading = true;
-    state.error = null;
-    try {
-      const json = await ajax(`/plugin-pages/${encodeURIComponent(slug)}.json`);
-      state.title = json.title || slug;
-      state.cooked = json.cooked || "";
-      document.title = state.title;
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error("[custom-pages] load error", e);
-      state.error = true;
-      state.title = slug;
-      state.cooked = "<p>La página no existe o no se pudo cargar.</p>";
-    } finally {
-      state.loading = false;
-      // fuerza rerender del componente (cambiando una prop reactivamente no siempre basta)
-      const appEvents = api.container.lookup("service:app-events");
-      appEvents?.trigger?.("custom-pages:rerender");
-    }
+  async function activate(currentSlug) {
+    if (active && slug === currentSlug) return;
+    active = true;
+    slug = currentSlug;
+    setLayoutHidden(true);
+    await loadAndRender(currentSlug);
   }
 
-  async function setActive(slugOrNull) {
-    const root = document.documentElement;
-    if (slugOrNull) {
-      state.active = true;
-      state.slug = slugOrNull;
-      root.classList.add("custom-page--active");
-      await loadPage(slugOrNull);
-    } else {
-      state.active = false;
-      state.slug = state.title = state.cooked = null;
-      root.classList.remove("custom-page--active");
-      const appEvents = api.container.lookup("service:app-events");
-      appEvents?.trigger?.("custom-pages:rerender");
-    }
+  function deactivate() {
+    if (!active) return;
+    active = false;
+    slug = null;
+    setLayoutHidden(false);
+    const el = ensureRoot();
+    el.style.display = "none";
+    el.innerHTML = "";
   }
 
   function onRouteChange(urlLike) {
     const a = document.createElement("a");
     a.href = urlLike || window.location.href;
-    const slug = matchCustomPage(a.pathname);
-    if (slug) {
-      if (!state.active || state.slug !== slug) setActive(slug);
-    } else if (state.active) {
-      setActive(null);
+    const s = matchSlug(a.pathname);
+    if (s) {
+      activate(s);
+    } else {
+      deactivate();
     }
   }
 
-  // Renderizar el componente en el outlet
-  api.renderInOutlet("above-main-container", "custom-page-view");
-
+  // Arranque y SPA
   api.onAppEvent("app:ready", () => onRouteChange());
   api.onPageChange((url) => onRouteChange(url));
 });
