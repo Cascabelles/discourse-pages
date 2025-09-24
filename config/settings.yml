@@ -1,0 +1,21 @@
+plugins:
+  custom_pages_enabled:
+    default: true
+    client: true
+
+  custom_pages_definitions:
+    type: text
+    default: |
+      {
+        "about": {
+          "title": "Acerca de",
+          "md": "# Acerca de\n\nEsta es una página de ejemplo."
+        },
+        "legal": {
+          "title": "Aviso legal",
+          "md": "# Aviso legal\n\nContenido legal aquí."
+        }
+      }
+    client: false
+    description:
+      es: "JSON/YAML con páginas: {slug: {title, md}}"

@@ -1,0 +1,10 @@
+{{#if this.loading}}
+  <div class="container"><div class="spinner"></div></div>
+{{else}}
+  <section class="plugin-page container">
+    <h1 class="plugin-page__title">{{this.title}}</h1>
+    <article class="plugin-page__content cooked">
+      {{{this.cooked}}}
+    </article>
+  </section>
+{{/if}}
