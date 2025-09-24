@@ -1,21 +1,27 @@
 plugins:
   custom_pages_enabled:
     default: true
-    client: true
+    client: false
 
-  custom_pages_definitions:
+  custom_pages_templates:
     type: text
     default: |
       {
-        "about": {
-          "title": "Acerca de",
-          "md": "# Acerca de\n\nEsta es una página de ejemplo."
+        "landing": {
+          "title": "Landing",
+          "mode": "inline",
+          "html": "<section><h1>Hola</h1><p>Bienvenid@s</p></section>",
+          "css": "body { margin:0; font-family: system-ui; } h1 { color: #0ea5e9; }",
+          "js": "console.log('landing lista');"
         },
-        "legal": {
-          "title": "Aviso legal",
-          "md": "# Aviso legal\n\nContenido legal aquí."
+        "tools": {
+          "title": "Herramientas",
+          "mode": "iframe",
+          "html": "<div><h1>Tools</h1><button onclick=alert('ok')>Test</button></div>",
+          "css": "html{background:#111;color:#eee}",
+          "js": "console.log('tools iframe')"
         }
       }
     client: false
     description:
-      es: "JSON/YAML con páginas: {slug: {title, md}}"
+      es: "JSON/YAML de páginas: {slug: {title, mode:inline|iframe, html, css, js}}"

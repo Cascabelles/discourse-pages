@@ -1,4 +1,4 @@
 es:
   site_settings:
-    custom_pages_enabled: "Habilitar Custom Pages"
-    custom_pages_definitions: "Definición de páginas (JSON/YAML): {slug:{title,md}}"
+    custom_pages_enabled: "Habilitar Custom Pages (templates)"
+    custom_pages_templates: "Definición de páginas (JSON/YAML): {slug:{title,mode,html,css,js}}"
