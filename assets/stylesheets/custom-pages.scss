@@ -1,0 +1,13 @@
+html.custom-page--active {
+  .d-header,
+  .navigation-container,
+  .topic-area,
+  .list-controls,
+  .topic-list,
+  .contents.clearfix,
+  .sidebar-wrapper,
+  #main > .container.posts {
+    display: none !important;
+  }
+}
+.custom-page .custom-page__inner { padding: 1rem 0; }
