@@ -1,10 +1,14 @@
 {{#if this.loading}}
   <div class="container"><div class="spinner"></div></div>
 {{else}}
-  <section class="plugin-page container">
-    <h1 class="plugin-page__title">{{this.title}}</h1>
-    <article class="plugin-page__content cooked">
-      {{{this.cooked}}}
-    </article>
-  </section>
+<div class="fastyle">
+  <div class="sidebar" id="sidebar" data-simplebar="init">
+    <ul class="search">
+      {{!-- Aquí puedes agregar elementos de búsqueda dinámicos --}}
+    </ul>
+  </div>
+  <div class="content">
+    {{yield}}
+  </div>
+</div>
 {{/if}}

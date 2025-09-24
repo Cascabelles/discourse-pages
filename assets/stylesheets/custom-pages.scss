@@ -12,3 +12,30 @@ html.custom-page--active {
 }
 
 .custom-page .custom-page__inner { padding: 1rem 0; }
+
+/* Estilos para replicar la estructura de referencia.html */
+.fastyle {
+  display: flex;
+  min-height: 70vh;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.fastyle .sidebar {
+  width: 280px;
+  background: #f7f7f7;
+  border-right: 1px solid #e0e0e0;
+  padding: 2rem 1rem;
+  min-height: 100%;
+}
+.fastyle .sidebar .search {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.fastyle .content {
+  flex: 1;
+  padding: 2rem;
+  min-width: 0;
+}
