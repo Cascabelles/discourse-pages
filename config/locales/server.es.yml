@@ -1,4 +1,4 @@
 es:
   site_settings:
     custom_pages_enabled: "Habilitar Custom Pages (templates)"
-    custom_pages_templates: "Definición de páginas en formato YAML: slug: {title, mode, html, css, js}. Incluye páginas como 'landing', 'tools' y 'editor' (Editor de Temas). Se edita con un editor YAML visual."
+    custom_pages_templates: "Definición de páginas en formato YAML: slug: {title, mode, html, css, js}. Incluye páginas como 'landing', 'tools' y 'editor' (Editor de Temas). Usa el botón 'Editar en Popup' para edición cómoda."

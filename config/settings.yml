@@ -4,7 +4,7 @@ plugins:
     client: false
 
   custom_pages_templates:
-    type: yaml
+    type: text
     default: |
       landing:
         title: "Landing"
