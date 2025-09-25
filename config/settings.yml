@@ -14,7 +14,7 @@ plugins:
     type: enum
     default: yaml
     client: true
-    enum: 
+    choices: 
       - yaml
       - json
       - javascript
