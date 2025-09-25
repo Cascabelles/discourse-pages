@@ -11,6 +11,7 @@ plugins:
       es: "JSON/YAML de páginas: {slug: {title, mode:inline|iframe, html, css, js}}"
 
   custom_pages_templates_language:
+    type: enum
     default: yaml
     client: true
     enum: 
