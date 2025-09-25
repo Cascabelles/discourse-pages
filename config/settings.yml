@@ -13,4 +13,11 @@ plugins:
   custom_pages_templates_language:
     default: yaml
     client: true
-    enum: "yaml|json|javascript|htmlmixed|css|markdown|handlebars"
+    enum: 
+      - yaml
+      - json
+      - javascript
+      - htmlmixed
+      - css
+      - markdown
+      - handlebars
